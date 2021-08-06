@@ -32,7 +32,7 @@ $message = $_GET['message'];
 			req.open('GET','chat.php?email=<?php echo $email; ?>&my_email=<?php echo $my_email; ?>',true);
 			req.send();
 		}
-		 setInterval(function() {ajax()}, 1000);
+		 setInterval(function() {ajax()}, 50000);
 
 	</script>
 </head>
