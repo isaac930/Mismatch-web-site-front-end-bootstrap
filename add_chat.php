@@ -270,14 +270,56 @@ $message = $_GET['message'];
 
                 <div class="topbar-divider d-none d-sm-block"></div>
 
-                <!-- Nav Item - User Information -->
-                <li class="nav-item dropdown no-arrow">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_GET['username']; ?></span>
-      
-                    </a>
-                    <!-- Dropdown - User Information -->
+                  <!-- Nav Item - User Information -->
+                  <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_GET['username']; ?></span>
+                                <?php
+// Initiate curl session in a variable (resource)
+$curl_handle = curl_init();
+
+$authorization = "Authorization: Bearer ".$token; //authorization bearer token
+
+$url = "https://powerful-cliffs-24132.herokuapp.com/api/auth/loggedin_user_profile";
+
+curl_setopt($curl_handle, CURLOPT_HTTPHEADER, array($authorization));
+
+// Set the curl URL option
+curl_setopt($curl_handle, CURLOPT_URL, $url);
+
+// This option will return data as a string instead of direct output
+curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
+
+// Execute curl & store data in a variable
+$curl_data = curl_exec($curl_handle);
+
+curl_close($curl_handle);
+
+// Decode JSON into PHP array
+$response_data = json_decode($curl_data);
+
+// Print all data if needed
+// print_r($response_data);
+// die();
+
+$profilearray = $response_data->profile;
+
+foreach ( $profilearray as $profile ) {
+
+?>
+<?php
+//$baseurl = "https://isaacbucketenock.s3.us-east-2.amazonaws.com/users/";
+$baseurl = "https://isaacbucketenock.s3.us-east-2.amazonaws.com/users/";
+?>
+
+  <img src="<?php echo $baseurl.$profile->image_path; ?>" width="50" height="50" class="rounded-circle" alt="profile-picture" border="0" />
+   
+  <?php
+}
+  ?>
+                            </a>
+                            <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                         aria-labelledby="userDropdown">
                         <a class="dropdown-item" href="profile?token=<?php echo $token; ?>&usertype=<?php echo $usertype ; ?>" target="popup" 
