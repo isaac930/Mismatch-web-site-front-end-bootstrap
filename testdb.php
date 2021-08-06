@@ -1,16 +1,21 @@
-<?php  
-$con = mysql_connect("host=ec2-52-1-20-236.compute-1.amazonaws.com port=5432 dbname=d8vab1ed2ht4so user=qunlsntemapkhq password=f5a2e33d88dda9e681a204e099040b298543b5b35cbd6ccf11a05344ada70415"); 
-if (!$con) {  
- echo "An error occurred.\n";  
- exit;  
-}  
-$result = my_query($con, "SELECT * FROM chats");  
-if (!$result) {  
- echo "An error occurred.\n";  
- exit;  
-}  
-while ($row = my_fetch_row($result)) {  
- echo "value1: $row[0]  value2: $row[1]";  
- echo "<br />\n";  
-}  
+<?php
+include 'connection.php';
+$email = $_GET['email'];
+$my_email = $_GET['my_email'];
+
+$query = pg_query($con, "SELECT * FROM chats ORDER BY id DESC");
+
+while ($row = pg_fetch_row($query)) :
 ?>
+<div class="alert alert-danger" role="alert">
+<?php $baseurl = "https://isaacbucketenock.s3.us-east-2.amazonaws.com/users/"; ?>
+<img src="<?php echo $baseurl.$row['image_path']?>" width="70" height="70" class="rounded-circle float-left" alt="profile-picture" border="0" />
+<br/>
+<br/>
+<a class="message-author" href="#"> <?php echo $row['name'];?> </a>
+<hr>
+<span class="message-date"> <?php echo $row['date'];?> </span>
+<hr>
+<span class="message-content"> <?php echo $row['post'];?> </span>
+</div>
+<?php endwhile; ?>
